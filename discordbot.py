@@ -1,6 +1,12 @@
 import discord
 import random
 import re
+from decouple import config
+
+TOKEN = config('TOKEN')
+
+
+
 client = discord.Client()
 
 random_contents = [
@@ -91,6 +97,6 @@ async def on_message(message):
 
 
 
-client.run("MTAwNzE2NTU5MzI5MzY4NDc2Nw.GLjGjr.O0yhvJQTa65s3Ch4pkNWOb7bEh6gkQGrOGQ8yo")
+client.run(TOKEN)
 
 
