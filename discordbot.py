@@ -92,18 +92,55 @@ async def on_message(message):
 
         await message.channel.send(embed=embed)
 
-    # if message.content=="react":
-    #     for reaction in ["☺️", "😙", "🚗"]:
-    #         await message.add_reaction(reaction)
-    #         # 自分の😙というリアクションを消す
-    #         await message.remove_reaction(message.guild.me, "😙")
-    #         #關閉特定反應
-    #         # 全員の😙というリアクションを消す
-    #         await message.clear_reaction("😙")
+   
 
-    #     if message.content=="clear":
-    #         await message.clear_reactions()
+    if message.content == "!join":
+        if message.author.voice is None:
+            await message.channel.send("あなたはボイスチャンネルに接続していません。")
+            return
+        # ボイスチャンネルに接続する
+        await message.author.voice.channel.connect()
+        await message.channel.send("接続しました。")
+
+    elif message.content == "!leave":
+        if message.guild.voice_client is None:
+            await message.channel.send("接続していません。")
+            return
+
+        # 切断する
+        await message.guild.voice_client.disconnect()
+
+        await message.channel.send("切断しました。")
     
+    
+    elif message.content == "!play":
+        if message.guild.voice_client is None:
+            await message.channel.send("接続していません。")
+            return
+
+        message.guild.voice_client.play(discord.FFmpegPCMAudio(executable="./ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe",source="./music/「 phony (フォニイ)  Tsumiki 」ver Petra Gurin.webm.mp3"))
+        # 再生中の場合は再生しない
+        # if message.guild.voice_client.is_playing():
+        #     await message.channel.send("再生中です。")
+        #     return
+
+        # source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./music/「 phony (フォニイ)  Tsumiki 」ver Petra Gurin.mp3"), volume=0.5)
+        # message.guild.voice_client.play(source)
+
+        # await message.channel.send('{} を再生します。'.format(player.title))
+    elif message.content == "!stop":
+        if message.guild.voice_client is None:
+            await message.channel.send("接続していません。")
+            return
+
+        # 再生中ではない場合は実行しない
+        if not message.guild.voice_client.is_playing():
+            await message.channel.send("再生していません。")
+            return
+
+        message.guild.voice_client.stop()
+
+        await message.channel.send("ストップしました。")
 
 
 
