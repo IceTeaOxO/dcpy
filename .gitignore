@@ -130,4 +130,6 @@ dmypy.json
 .pyre/
 =======
 .env
+/novel
+/image
 >>>>>>> 47464941fff111a22d49514e37f55e60a0325f8b

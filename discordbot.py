@@ -2,6 +2,7 @@ import discord
 import random
 import re
 from decouple import config
+from novel import noveltext
 
 TOKEN = config('TOKEN')
 
@@ -28,13 +29,22 @@ async def on_message(message):
     if message.author.bot:
         return 
     # メッセージの本文が 鳴いて だった場合
-    if message.content == "鳴いて":
-        # 送信するメッセージをランダムで決める
-        content = random.choice(random_contents)
-        # メッセージが送られてきたチャンネルに送る
-        await message.channel.send(content)
-    elif message.content == "おはよう":
-        await message.channel.send("おはよう！！")
+    if message.content == "sesela":
+        # content = random.choice(random_contents)
+        #爬蟲
+        content=noveltext()
+
+        # content = ""
+        # with open("test.txt",'r',encoding="utf-8") as f:
+        #     content = f.read()
+        sep = "▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚"
+        await message.channel.send(sep)
+        #使用for迴圈一次傳2000字
+        for i in range(round(len(content)/1500)+1):
+            await message.channel.send(content[i*1500:min(((i+1)*1500),len(content))])
+
+        await message.channel.send(sep)
+
     
     #發送圖片
     if message.content == "Petra":
@@ -58,7 +68,7 @@ async def on_message(message):
                 await attachment.save("./image/"+str(attachment.url[60:78])+".jpeg")
                 print(attachment.url)
     #發送embed訊息
-    if message.content=="embed":
+    if message.content=="QQQQQQQ":
         embed = discord.Embed(title="タイトル", description="説明")
 
         # フィールドを追加する
