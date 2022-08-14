@@ -3,6 +3,7 @@ import random
 import re
 from decouple import config
 from novel import noveltext
+from yt import makeMusic
 
 TOKEN = config('TOKEN')
 
@@ -47,9 +48,9 @@ async def on_message(message):
 
     
     #發送圖片
-    if message.content == "Petra":
-        # ローカルにあるcat.pngという名前のファイルを送信する
-        await message.channel.send(file=discord.File("image/007635388430553.png"))
+    # if message.content == "Petra":
+    #     # ローカルにあるcat.pngという名前のファイルを送信する
+    #     await message.channel.send(file=discord.File("image/007635388430553.png"))
 
 
     #儲存有權限的頻道的圖片
@@ -59,66 +60,68 @@ async def on_message(message):
             if attachment.url.endswith(("png")):
                 #發送圖片的URL
                 # await message.channel.send(attachment.url)
-                await attachment.save("./image/"+str(attachment.url[60:78])+".png")
+                await attachment.save("./image/"+str(attachment.url[60:77])+".png")
                 print(attachment.url)
             if attachment.url.endswith(("jpg")):
-                await attachment.save("./image/"+str(attachment.url[60:78])+".jpg")
+                await attachment.save("./image/"+str(attachment.url[60:77])+".jpg")
                 print(attachment.url)
             if attachment.url.endswith(("jpeg")):
-                await attachment.save("./image/"+str(attachment.url[60:78])+".jpeg")
+                await attachment.save("./image/"+str(attachment.url[60:77])+".jpeg")
                 print(attachment.url)
     #發送embed訊息
-    if message.content=="QQQQQQQ":
-        embed = discord.Embed(title="タイトル", description="説明")
+    # if message.content=="QQQQQQQ":
+    #     embed = discord.Embed(title="タイトル", description="説明")
 
-        # フィールドを追加する
-        embed.add_field(name="名前", value="値")
+    #     # フィールドを追加する
+    #     embed.add_field(name="名前", value="値")
 
-        # タイムスタンプを設定する
-        import datetime
-        embed.timestamp = datetime.datetime.now()
+    #     # タイムスタンプを設定する
+    #     import datetime
+    #     embed.timestamp = datetime.datetime.now()
 
-        # サムネイルを追加する(URL指定なので注意！)
-        embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/0/07/Viscontisforzatarot.jpg")
+    #     # サムネイルを追加する(URL指定なので注意！)
+    #     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/0/07/Viscontisforzatarot.jpg")
 
-        # 画像を追加する(こちらもURL)
-        embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/0/07/Viscontisforzatarot.jpg")
+    #     # 画像を追加する(こちらもURL)
+    #     embed.set_image(url="https://upload.wikimedia.org/wikipedia/commons/0/07/Viscontisforzatarot.jpg")
 
-        # 上側のユーザー情報を追加
-        embed.set_author(name="タロットマン", url="https://ja.wikipedia.org/wiki/タロット", icon_url="https://upload.wikimedia.org/wikipedia/commons/6/6f/Taroky_trul.JPG")
+    #     # 上側のユーザー情報を追加
+    #     embed.set_author(name="タロットマン", url="https://ja.wikipedia.org/wiki/タロット", icon_url="https://upload.wikimedia.org/wikipedia/commons/6/6f/Taroky_trul.JPG")
 
-        # 下側のアイコンとテキストを追加
-        embed.set_footer(text="アルカナあるかな？", icon_url="https://upload.wikimedia.org/wikipedia/commons/6/6f/Taroky_trul.JPG")
+    #     # 下側のアイコンとテキストを追加
+    #     embed.set_footer(text="アルカナあるかな？", icon_url="https://upload.wikimedia.org/wikipedia/commons/6/6f/Taroky_trul.JPG")
 
-        await message.channel.send(embed=embed)
+    #     await message.channel.send(embed=embed)
 
    
 
     if message.content == "!join":
         if message.author.voice is None:
-            await message.channel.send("あなたはボイスチャンネルに接続していません。")
+            await message.channel.send("機器人未加入語音頻道")
             return
         # ボイスチャンネルに接続する
         await message.author.voice.channel.connect()
-        await message.channel.send("接続しました。")
+        await message.channel.send("連接成功")
 
     elif message.content == "!leave":
         if message.guild.voice_client is None:
-            await message.channel.send("接続していません。")
+            await message.channel.send("未連接語音頻道")
             return
 
         # 切断する
         await message.guild.voice_client.disconnect()
 
-        await message.channel.send("切断しました。")
+        await message.channel.send("切斷連接")
     
     
-    elif message.content == "!play":
+    elif message.content.startswith('!play '):
         if message.guild.voice_client is None:
-            await message.channel.send("接続していません。")
+            await message.channel.send("未連接語音頻道")
             return
-
-        message.guild.voice_client.play(discord.FFmpegPCMAudio(executable="./ffmpeg-master-latest-win64-gpl/bin/ffmpeg.exe",source="./music/「 phony (フォニイ)  Tsumiki 」ver Petra Gurin.webm.mp3"))
+        musicName = makeMusic(message.content)
+        # print(musicName)
+        message.guild.voice_client.play(discord.FFmpegPCMAudio(executable="C:/Users/sandy/ffmpeg-2022-08-10-git-8fc7f0fdec-essentials_build/bin/ffmpeg.exe",source="./music/"+musicName))
+        await message.channel.send("正在撥放\n"+musicName[:-5])
         # 再生中の場合は再生しない
         # if message.guild.voice_client.is_playing():
         #     await message.channel.send("再生中です。")
